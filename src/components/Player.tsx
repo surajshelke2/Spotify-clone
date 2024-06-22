@@ -1,33 +1,47 @@
+import React, { useContext } from 'react';
+import { PlayerContext } from '../contexts/PlayerContext';
+import { assets } from '../assets/assets'; // Assuming assets is imported correctly
 
-import {assets, songsData} from '../assets/assets'
 const Player = () => {
+  const context = useContext(PlayerContext);
+
+  if (!context) {
+    throw new Error('Player component must be used within a PlayerContextProvider');
+  }
+
+  const { track, seekBar, seekBg, playerStatus, play, pause, time } = context;
+
+  if (!seekBar || !seekBg) {
+    throw new Error('seekBar or seekBg refs are not properly initialized');
+  }
+
   return (
     <div className='h-[10%] bg-black flex justify-between items-center text-white px-4'>
-
-        <div className="hidden lg:flex items-center gap-4">
-            <img className="w-12" src={songsData[0].image} alt="" />
-            <div className="">
-                <p>{songsData[0].name}</p>
-                <p>{songsData[0].desc.slice(0,10)}</p>
-            </div>
+      <div className="hidden lg:flex items-center gap-4">
+        <img className="w-12" src={track.image} alt="" />
+        <div>
+          <p>{track.name}</p>
+          <p>{track.desc.slice(0, 10)}</p>
         </div>
+      </div>
       <div className="flex flex-col items-center gap-1 m-auto">
-        <div className="flex gap-4 ">
-            <img  className="w-4 cursor-pointer" src={assets.shuffle_icon} alt="" />
-            <img  className="w-4 cursor-pointer" src={assets.prev_icon} alt="" />
-            <img  className="w-4 cursor-pointer" src={assets.play_icon} alt="" />
-            <img  className="w-4 cursor-pointer" src={assets.next_icon} alt="" />
-            <img  className="w-4 cursor-pointer" src={assets.loop_icon} alt="" />
-
+        <div className="flex gap-4">
+          <img className="w-4 cursor-pointer" src={assets.shuffle_icon} alt="" />
+          <img className="w-4 cursor-pointer" src={assets.prev_icon} alt="" />
+          {playerStatus
+            ? <img onClick={pause} className="w-4 cursor-pointer" src={assets.pause_icon} alt="" />
+            : <img onClick={play} className="w-4 cursor-pointer" src={assets.play_icon} alt="" />
+          }
+          <img className="w-4 cursor-pointer" src={assets.next_icon} alt="" />
+          <img className="w-4 cursor-pointer" src={assets.loop_icon} alt="" />
         </div>
         <div className="flex items-center gap-5">
-            <p>0:00</p>
-            <div className="w-[60vw] max-w-[500px] bg-gray-300 rounded-full cursor-pointer">
-                <hr className='h-1 border-none bg-green-800 rounded-full'/>
-            </div>
-            <p>3:20</p>
+          <p>{time.currentTime.minutes}:{time.currentTime.seconds}</p>
+          <div ref={seekBg} className="w-[60vw] max-w-[500px] bg-gray-300 rounded-full cursor-pointer">
+            <hr ref={seekBar} className='h-1 border-none bg-green-800 rounded-full' />
+          </div>
+          <p>{time.totalTime.minutes}:{time.totalTime.seconds}</p>
         </div>
-
       </div>
       <div className="hidden lg:flex items-center gap-2 opacity-75">
         <img className='w-4' src={assets.play_icon} alt="" />
@@ -39,9 +53,8 @@ const Player = () => {
         <img className='w-4' src={assets.mini_player_icon} alt="" />
         <img className='w-4' src={assets.zoom_icon} alt="" />
       </div>
-
     </div>
-  )
-}
+  );
+};
 
-export default Player
+export default Player;
