@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import  { useContext } from 'react';
 import { PlayerContext } from '../contexts/PlayerContext';
 import { assets } from '../assets/assets'; // Assuming assets is imported correctly
 
@@ -9,7 +9,7 @@ const Player = () => {
     throw new Error('Player component must be used within a PlayerContextProvider');
   }
 
-  const { track, seekBar, seekBg, playerStatus, play, pause, time } = context;
+  const { track, seekBar, seekBg, playerStatus, play, pause, time , next, previous } = context;
 
   if (!seekBar || !seekBg) {
     throw new Error('seekBar or seekBg refs are not properly initialized');
@@ -26,13 +26,13 @@ const Player = () => {
       </div>
       <div className="flex flex-col items-center gap-1 m-auto">
         <div className="flex gap-4">
-          <img className="w-4 cursor-pointer" src={assets.shuffle_icon} alt="" />
-          <img className="w-4 cursor-pointer" src={assets.prev_icon} alt="" />
+          <img  className="w-4 cursor-pointer" src={assets.shuffle_icon} alt="" />
+          <img onClick={previous} className="w-4 cursor-pointer" src={assets.prev_icon} alt="" />
           {playerStatus
             ? <img onClick={pause} className="w-4 cursor-pointer" src={assets.pause_icon} alt="" />
             : <img onClick={play} className="w-4 cursor-pointer" src={assets.play_icon} alt="" />
           }
-          <img className="w-4 cursor-pointer" src={assets.next_icon} alt="" />
+          <img onClick={next} className="w-4 cursor-pointer" src={assets.next_icon} alt="" />
           <img className="w-4 cursor-pointer" src={assets.loop_icon} alt="" />
         </div>
         <div className="flex items-center gap-5">
